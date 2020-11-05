@@ -6,5 +6,4 @@ A custom flutter app for Philips Hue lights.
 
 ## Used APIs
 
-Requires registration
-[Hue API](https://developers.meethue.com/develop/hue-api/)
+[Hue API](https://developers.meethue.com/develop/hue-api/) (Requires registration)
