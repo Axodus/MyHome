@@ -1,4 +1,4 @@
-package com.example.AikenHome
+package com.example.YourHome
 
 import io.flutter.embedding.android.FlutterActivity
 
