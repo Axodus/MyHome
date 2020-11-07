@@ -1,4 +1,4 @@
-# AikenHome
+# YourHome
 
 A custom flutter app for Philips Hue lights.
 
@@ -16,3 +16,6 @@ Add in the next lines:
 String developerUsn = 'yourHueDevUsername';
 String developerIP = 'yourBridgeIP';
 ```
+
+## Recommendations
+If you have any idea about a better name, either DM me if you know me, or open an issue.
