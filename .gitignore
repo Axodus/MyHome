@@ -39,3 +39,7 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+
+# Settings
+app_variables.json
+/lib/config/config.dart

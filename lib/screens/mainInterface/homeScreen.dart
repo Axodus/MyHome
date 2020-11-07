@@ -1,8 +1,16 @@
+import 'dart:convert';
+
 import 'package:YourHome/components/appBar.dart';
 import 'package:YourHome/components/curvePtr.dart';
 import 'package:YourHome/config/colors.dart';
+import 'package:YourHome/config/config.dart';
+import 'package:YourHome/config/defaultValues.dart';
+import 'package:YourHome/helpers/hue.dart';
+import 'package:YourHome/widgets/homeScreen/groupCard.dart';
+import 'package:YourHome/widgets/homeScreen/noGroupsMsg.dart';
 import 'package:YourHome/widgets/homeScreen/top.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -10,6 +18,98 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List < TableRow > groups;
+  bool allLightsToggle = false;
+  bool groupsToggle = false;
+  bool hasGroups = false;
+
+  String username = developerUsn;
+  String bridgeIP = developerIP;
+
+  void initState() {
+    super.initState();
+
+    getGroups();
+    getLightsStatus();
+
+    groups = < TableRow > [
+      new TableRow(
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(0, 0, 0, 0)
+        ),
+        children: [
+          Align(
+            alignment: Alignment.center,
+          ),
+        ]
+      )
+    ];
+  }
+
+  saveAllLightSP() async{
+    SharedPreferences storage = await SharedPreferences.getInstance();
+
+    storage.setBool('allLightsToggle', allLightsToggle);
+  }
+
+  Future < dynamic > getGroups() async{
+
+    // Making get request for data
+    var response = await getRequest(username, bridgeIP, 'groups');
+    
+
+    Map < String, dynamic > lightGroups = jsonDecode(response);
+    print(lightGroups);
+    print(lightGroups.length);
+    
+    if (lightGroups.length == 0) {
+      setState(() {
+        hasGroups = false;
+      });
+    } else {
+      setState(() {
+        hasGroups = true;
+      });
+    }
+
+    for (int i = 1; i < lightGroups.length + 1; i++) {
+      var individualGroup = lightGroups[("$i")];
+      var groupName = individualGroup["name"];
+      print(groupName);
+
+      setState(() {
+        groups.add(
+          new TableRow(
+            children: [
+              groupCard(
+                context,
+                groupName,
+                Switch(
+                  activeColor: primary,
+                  activeTrackColor: secondary2,
+                  value: groupsToggle,
+                  onChanged: (value) {
+                    setState(() {
+                      groupsToggle = value;
+                    });
+                    
+
+                    print(groupsToggle);
+
+                    // String glToggle = '{"on": $groupsToggle}';
+
+                    // putRequest(username, bridgeIP, 'groups', i, 'action', glToggle);
+                  },
+                )
+              )
+            ]
+          )
+        );
+      });
+    }
+    return groups;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,13 +121,62 @@ class _HomeScreenState extends State<HomeScreen> {
               size: MediaQuery.of(context).size,
               painter: CustomCurve(),
             ),
+            ListView(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.12),
+                Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      "YOUR GROUPS",
+                      style: TextStyle(
+                        fontFamily: 'DinNext',
+                        color: secondary2,
+                        fontSize: 22
+                      ),
+                    ),
+                  ),
+                ),
+
+                hasGroups ? new Table(
+                  border: null,
+                  children: groups,
+                )
+                :
+                Align(
+                  alignment: Alignment.center,
+                  child: noGroupsMessage(context),
+                )
+              ],
+            ),
             Padding(
               padding: EdgeInsets.all(15.0),
               child: Align(
                 alignment: Alignment.topCenter,
-                child: topBar(context),
+                child: topBar(
+                  context,
+                  Switch(
+                    activeColor: primary,
+                    activeTrackColor: secondary1,
+                    value: allLightsToggle,
+                    onChanged: (value) {
+                      setState(() {
+                        allLightsToggle = value;
+
+                        String lightsToggle = '{"on": $allLightsToggle}';
+
+                        saveAllLightSP();
+
+                        putRequest(username, bridgeIP, 'groups', '1', 'action', lightsToggle);
+                        putRequest(username, bridgeIP, 'groups', '2', 'action', lightsToggle);
+                        putRequest(username, bridgeIP, 'groups', '3', 'action', lightsToggle);
+                      });
+                    }
+                  )
+                ),
               ),
-            )
+            ),
           ],
         ),
         color: primary,
