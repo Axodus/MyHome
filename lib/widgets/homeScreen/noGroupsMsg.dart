@@ -1,7 +1,7 @@
 import 'package:YourHome/config/colors.dart';
 import 'package:flutter/material.dart';
 
-noGroupsMessage(context) {
+noDataMessage(context, whatIsThereNoneOf) {
   return Container(
     child: Stack(
       children: [
@@ -10,7 +10,7 @@ noGroupsMessage(context) {
           child: Align(
             alignment: Alignment.topCenter,
             child: Text(
-              "You have no groups",
+              "You have no $whatIsThereNoneOf",
               style: TextStyle(
                 fontFamily: 'DinNext',
                 fontSize: 24,

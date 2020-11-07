@@ -10,18 +10,17 @@ import 'package:YourHome/widgets/homeScreen/groupCard.dart';
 import 'package:YourHome/widgets/homeScreen/noGroupsMsg.dart';
 import 'package:YourHome/widgets/homeScreen/top.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeScreen extends StatefulWidget {
+class AllLights extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _AllLightsState createState() => _AllLightsState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  List < TableRow > groups;
+class _AllLightsState extends State<AllLights> {
+  List < TableRow > lights;
   bool allLightsToggle = false;
-  bool groupsToggle = false;
-  bool hasGroups = false;
+  bool lightsToggle = false;
+  bool hasLights = false;
 
   String username = developerUsn;
   String bridgeIP = developerIP;
@@ -29,10 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    getGroups();
-    getLightsStatus();
+    getLights();
+    // getLightsStatus();
 
-    groups = < TableRow > [
+    lights = < TableRow > [
       new TableRow(
         decoration: BoxDecoration(
           color: Color.fromRGBO(0, 0, 0, 0)
@@ -46,51 +45,33 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
   }
 
-  toggleAllLights(lightsToggle) async {
-    // Making get request to hue
-    var response = await getRequest(username, bridgeIP, 'lights');
-
-    Map < String, dynamic > allLights = jsonDecode(response);
-    print(allLights.length);
-
-    for (int id = 1; id < allLights.length; id++) {
-      var individualLight = allLights[("$id")];
-      
-      String indLightTog = '{"on": $lightsToggle}';
-
-      // Make put request to change state of light
-
-      putRequest(username, bridgeIP, 'lights', id, 'state', indLightTog);
-    }
-  }
-
-  Future < dynamic > getGroups() async{
+  Future < dynamic > getLights() async{
 
     // Making get request for data
-    var response = await getRequest(username, bridgeIP, 'groups');
+    var response = await getRequest(username, bridgeIP, 'lights');
     
 
-    Map < String, dynamic > lightGroups = jsonDecode(response);
-    print(lightGroups);
-    print(lightGroups.length);
+    Map < String, dynamic > allLights = jsonDecode(response);
+    print(allLights);
+    print(allLights.length);
     
-    if (lightGroups.length == 0) {
+    if (allLights.length == 0) {
       setState(() {
-        hasGroups = false;
+        hasLights = false;
       });
     } else {
       setState(() {
-        hasGroups = true;
+        hasLights = true;
       });
     }
 
-    for (int i = 1; i < lightGroups.length + 1; i++) {
-      var individualGroup = lightGroups[("$i")];
-      var groupName = individualGroup["name"];
+    for (int i = 1; i < allLights.length + 1; i++) {
+      var individualLight = allLights[("$i")];
+      var groupName = individualLight["name"];
       print(groupName);
 
       setState(() {
-        groups.add(
+        lights.add(
           new TableRow(
             children: [
               groupCard(
@@ -99,14 +80,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 Switch(
                   activeColor: primary,
                   activeTrackColor: secondary2,
-                  value: groupsToggle,
+                  value: lightsToggle,
                   onChanged: (value) {
                     setState(() {
-                      groupsToggle = value;
+                      lightsToggle = value;
                     });
                     
 
-                    print(groupsToggle);
+                    print(lightsToggle);
 
                     // String glToggle = '{"on": $groupsToggle}';
 
@@ -119,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       });
     }
-    return groups;
+    return lights;
   }
 
   @override
@@ -141,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Align(
                     alignment: Alignment.topCenter,
                     child: Text(
-                      "YOUR GROUPS",
+                      "YOUR LIGHTS",
                       style: TextStyle(
                         fontFamily: 'DinNext',
                         color: secondary2,
@@ -151,14 +132,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
 
-                hasGroups ? new Table(
+                hasLights ? new Table(
                   border: null,
-                  children: groups,
+                  children: lights,
                 )
                 :
                 Align(
                   alignment: Alignment.center,
-                  child: noDataMessage(context, "groups"),
+                  child: noDataMessage(context, "lights"),
                 ),
               ],
             ),

@@ -1,4 +1,5 @@
 import 'package:YourHome/config/colors.dart';
+import 'package:YourHome/screens/mainInterface/allLights.dart';
 import 'package:YourHome/screens/mainInterface/homeScreen.dart';
 import 'package:YourHome/screens/mainInterface/settings.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class _HomeState extends State < Home > {
 
   final List < Widget > _children = [
     HomeScreen(),
+    AllLights(),
     Settings()
   ];
 
@@ -38,6 +40,10 @@ class _HomeState extends State < Home > {
           new BottomNavigationBarItem(
             icon: new Icon(Icons.home),
             label: "Home",
+          ),
+          new BottomNavigationBarItem(
+            icon: new Icon(Icons.lightbulb),
+            label: "Lights",
           ),
           new BottomNavigationBarItem(
             icon: new Icon(Icons.settings),
