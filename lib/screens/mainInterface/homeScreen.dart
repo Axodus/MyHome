@@ -67,23 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  toggleAllLights(lightsToggle) async {
-    // Making get request to hue
-    var response = await getRequest(username, bridgeIP, 'lights');
-
-    Map < String, dynamic > allLights = jsonDecode(response);
-    print(allLights.length);
-
-    for (int id = 1; id < allLights.length; id++) {
-      
-      String indLightTog = '{"on": $lightsToggle}';
-
-      // Make put request to change state of light
-
-      putRequest(username, bridgeIP, 'lights', id, 'state', indLightTog);
-    }
-  }
-
   editGroupAttr() {
     print("group attributes edit");
   }
@@ -170,17 +153,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   alignment: Alignment.center,
                   child: noDataMessage(context, "groups"),
                 ),
-
-                new Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: FloatingActionButton.extended(
-                    onPressed: () {
-                      getAllLightsState();
-                      checkAllLightsState();
-                    },
-                    label: Text("Test Button")
-                  ),
-                )
               ],
             ),
             Padding(
@@ -199,13 +171,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         String lightsToggle = '{"on": $allLightsToggle}';
 
-                        // toggleAllLights(lightsToggle);
+                        toggleAllLights(lightsToggle);
+                        // putRequest(developerUsn, developerIP, 'lights', 1, 'state', lightsToggle);
                       });
                     }
                   )
                 ),
               ),
             ),
+
           ],
         ),
         color: primary,

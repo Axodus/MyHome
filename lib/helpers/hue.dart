@@ -19,6 +19,7 @@ putRequest(username, bridgeIP, type, id, action, json) async {
 
   String body = response.body;
 
+  print("CHANGED SOMETHING");
   print(statusCode);
   print(body);
 }

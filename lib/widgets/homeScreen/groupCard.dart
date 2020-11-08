@@ -34,11 +34,11 @@ groupCard(context, groupName, state, openEdit) {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Container(
-                    width: 50,
+                    width: 45,
                     height: 50,
                     decoration: BoxDecoration(
                       color: state ? primary : compl1,
-                      borderRadius: BorderRadius.circular(50)
+                      borderRadius: BorderRadius.circular(100)
                     ),
                   ),
                 ),

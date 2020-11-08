@@ -171,6 +171,7 @@ class _AllLightsState extends State<AllLights> {
                         String lightsToggle = '{"on": $allLightsToggle}';
 
                         toggleAllLights(lightsToggle);
+                        //putRequest(developerUsn, developerIP, 'lights', 1, 'state', lightsToggle);
                       });
                     }
                   )

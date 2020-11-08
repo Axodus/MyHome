@@ -12,11 +12,8 @@ toggleAllLights(lightsToggle) async {
 
   for (int id = 1; id < allLights.length + 1; id++) {
 
-    String indLightTog = '{"on": $lightsToggle}';
-
     // Make put request to change state of light
-
-    putRequest(developerUsn, developerIP, 'lights', id, 'state', indLightTog);
+    putRequest(developerUsn, developerIP, 'lights', id, 'state', lightsToggle);
   }
 }
 
