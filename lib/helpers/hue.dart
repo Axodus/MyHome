@@ -2,13 +2,16 @@ import 'dart:convert';
 
 import 'package:YourHome/config/config.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Type is either lights or groups
 // Action is either state (individual lights) or action (groups)
 putRequest(username, bridgeIP, type, id, action, json) async {
   String url = 'http://$bridgeIP/api/$username/$type/$id/$action';
 
-  Map<String, String> headers = {"Content-type": "application/json"};
+  Map < String, String > headers = {
+    "Content-type": "application/json"
+  };
 
   Response response = await put(url, headers: headers, body: json);
 
@@ -39,20 +42,3 @@ getRequest(username, bridgeIP, type) async {
 
   return json;
 }
-
-toggleAllLights(lightsToggle) async {
-    // Making get request to hue
-    var response = await getRequest(developerUsn, developerIP, 'lights');
-
-    Map < String, dynamic > allLights = jsonDecode(response);
-    print(allLights.length);
-
-    for (int id = 1; id < allLights.length; id++) {
-      
-      String indLightTog = '{"on": $lightsToggle}';
-
-      // Make put request to change state of light
-
-      putRequest(developerUsn, developerIP, 'lights', id, 'state', indLightTog);
-    }
-  }

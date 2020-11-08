@@ -6,6 +6,7 @@ import 'package:YourHome/config/colors.dart';
 import 'package:YourHome/config/config.dart';
 import 'package:YourHome/config/defaultValues.dart';
 import 'package:YourHome/helpers/hue.dart';
+import 'package:YourHome/screens/errorScreen.dart';
 import 'package:YourHome/widgets/homeScreen/groupCard.dart';
 import 'package:YourHome/widgets/homeScreen/noGroupsMsg.dart';
 import 'package:YourHome/widgets/homeScreen/top.dart';
@@ -30,7 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     getGroups();
-    getLightsStatus();
+    getAllLightsState();
+    checkAllLightsState();
 
     groups = < TableRow > [
       new TableRow(
@@ -46,6 +48,25 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
   }
 
+  checkAllLightsState() async {
+    SharedPreferences storage = await SharedPreferences.getInstance();
+
+    if (storage.getBool('allLightsOn') == true) {
+      setState(() {
+        allLightsToggle = true;
+      });
+    } else if (storage.getBool('allLightsOn') == false) {
+      setState(() {
+        allLightsToggle = false;
+      });
+    } else {
+      Navigator.push(
+      context,
+        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      );
+    }
+  }
+
   toggleAllLights(lightsToggle) async {
     // Making get request to hue
     var response = await getRequest(username, bridgeIP, 'lights');
@@ -54,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
     print(allLights.length);
 
     for (int id = 1; id < allLights.length; id++) {
-      var individualLight = allLights[("$id")];
       
       String indLightTog = '{"on": $lightsToggle}';
 
@@ -62,6 +82,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
       putRequest(username, bridgeIP, 'lights', id, 'state', indLightTog);
     }
+  }
+
+  editGroupAttr() {
+    print("group attributes edit");
   }
 
   Future < dynamic > getGroups() async{
@@ -87,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
     for (int i = 1; i < lightGroups.length + 1; i++) {
       var individualGroup = lightGroups[("$i")];
       var groupName = individualGroup["name"];
+      var groupLightsState = individualGroup["state"]["all_on"];
       print(groupName);
 
       setState(() {
@@ -96,23 +121,8 @@ class _HomeScreenState extends State<HomeScreen> {
               groupCard(
                 context,
                 groupName,
-                Switch(
-                  activeColor: primary,
-                  activeTrackColor: secondary2,
-                  value: groupsToggle,
-                  onChanged: (value) {
-                    setState(() {
-                      groupsToggle = value;
-                    });
-                    
-
-                    print(groupsToggle);
-
-                    // String glToggle = '{"on": $groupsToggle}';
-
-                    // putRequest(username, bridgeIP, 'groups', i, 'action', glToggle);
-                  },
-                )
+                groupLightsState,
+                editGroupAttr
               )
             ]
           )
@@ -160,6 +170,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   alignment: Alignment.center,
                   child: noDataMessage(context, "groups"),
                 ),
+
+                new Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: FloatingActionButton.extended(
+                    onPressed: () {
+                      getAllLightsState();
+                      checkAllLightsState();
+                    },
+                    label: Text("Test Button")
+                  ),
+                )
               ],
             ),
             Padding(
@@ -178,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         String lightsToggle = '{"on": $allLightsToggle}';
 
-                        toggleAllLights(lightsToggle);
+                        // toggleAllLights(lightsToggle);
                       });
                     }
                   )

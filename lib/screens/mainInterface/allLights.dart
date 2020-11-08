@@ -6,10 +6,12 @@ import 'package:YourHome/config/colors.dart';
 import 'package:YourHome/config/config.dart';
 import 'package:YourHome/config/defaultValues.dart';
 import 'package:YourHome/helpers/hue.dart';
+import 'package:YourHome/screens/errorScreen.dart';
 import 'package:YourHome/widgets/homeScreen/groupCard.dart';
 import 'package:YourHome/widgets/homeScreen/noGroupsMsg.dart';
 import 'package:YourHome/widgets/homeScreen/top.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AllLights extends StatefulWidget {
   @override
@@ -29,7 +31,8 @@ class _AllLightsState extends State<AllLights> {
     super.initState();
 
     getLights();
-    // getLightsStatus();
+    getAllLightsState();
+    checkAllLightsState();
 
     lights = < TableRow > [
       new TableRow(
@@ -45,12 +48,34 @@ class _AllLightsState extends State<AllLights> {
     ];
   }
 
+  checkAllLightsState() async {
+    SharedPreferences storage = await SharedPreferences.getInstance();
+
+    if (storage.getBool('allLightsOn') == true) {
+      setState(() {
+        allLightsToggle = true;
+      });
+    } else if (storage.getBool('allLightsOn') == false) {
+      setState(() {
+        allLightsToggle = false;
+      });
+    } else {
+      Navigator.push(
+      context,
+        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      );
+    }
+  }
+
+  editLightAttr() {
+    print("light attributes edit");
+  }
+
   Future < dynamic > getLights() async{
 
     // Making get request for data
     var response = await getRequest(username, bridgeIP, 'lights');
     
-
     Map < String, dynamic > allLights = jsonDecode(response);
     print(allLights);
     print(allLights.length);
@@ -67,8 +92,9 @@ class _AllLightsState extends State<AllLights> {
 
     for (int i = 1; i < allLights.length + 1; i++) {
       var individualLight = allLights[("$i")];
-      var groupName = individualLight["name"];
-      print(groupName);
+      var lightName = individualLight["name"];
+      var lightState = individualLight["state"]["on"];
+      print(lightName);
 
       setState(() {
         lights.add(
@@ -76,24 +102,9 @@ class _AllLightsState extends State<AllLights> {
             children: [
               groupCard(
                 context,
-                groupName,
-                Switch(
-                  activeColor: primary,
-                  activeTrackColor: secondary2,
-                  value: lightsToggle,
-                  onChanged: (value) {
-                    setState(() {
-                      lightsToggle = value;
-                    });
-                    
-
-                    print(lightsToggle);
-
-                    // String glToggle = '{"on": $groupsToggle}';
-
-                    // putRequest(username, bridgeIP, 'groups', i, 'action', glToggle);
-                  },
-                )
+                lightName,
+                lightState,
+                editLightAttr
               )
             ]
           )

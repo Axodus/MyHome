@@ -1,3 +1,4 @@
+import 'package:YourHome/config/defaultValues.dart';
 import 'package:YourHome/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,8 @@ void main() async {
         systemNavigationBarColor: Colors.transparent,
       )
   );
+
+  getAllLightsState();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
       .then((_) => runApp(
