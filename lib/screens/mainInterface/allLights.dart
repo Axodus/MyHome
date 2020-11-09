@@ -94,6 +94,10 @@ class _AllLightsState extends State<AllLights> {
       var individualLight = allLights[("$i")];
       var lightName = individualLight["name"];
       var lightState = individualLight["state"]["on"];
+      var lightBrightness = individualLight["state"]["bri"];
+
+      var lBri = lightBrightness.toDouble();
+
       print(lightName);
 
       setState(() {
@@ -104,7 +108,11 @@ class _AllLightsState extends State<AllLights> {
                 context,
                 lightName,
                 lightState,
-                editLightAttr
+                lBri,
+                lightState,
+                i,
+                'lights',
+                'state',
               )
             ]
           )
@@ -171,7 +179,6 @@ class _AllLightsState extends State<AllLights> {
                         String lightsToggle = '{"on": $allLightsToggle}';
 
                         toggleAllLights(lightsToggle);
-                        //putRequest(developerUsn, developerIP, 'lights', 1, 'state', lightsToggle);
                       });
                     }
                   )

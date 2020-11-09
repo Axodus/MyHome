@@ -1,8 +1,4 @@
-import 'dart:convert';
-
-import 'package:YourHome/config/config.dart';
 import 'package:http/http.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // Type is either lights or groups
 // Action is either state (individual lights) or action (groups)

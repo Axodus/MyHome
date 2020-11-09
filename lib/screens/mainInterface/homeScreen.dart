@@ -8,6 +8,7 @@ import 'package:YourHome/config/defaultValues.dart';
 import 'package:YourHome/helpers/hue.dart';
 import 'package:YourHome/screens/errorScreen.dart';
 import 'package:YourHome/widgets/homeScreen/groupCard.dart';
+import 'package:YourHome/widgets/homeScreen/groupManipulate.dart';
 import 'package:YourHome/widgets/homeScreen/noGroupsMsg.dart';
 import 'package:YourHome/widgets/homeScreen/top.dart';
 import 'package:flutter/material.dart';
@@ -67,10 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  editGroupAttr() {
-    print("group attributes edit");
-  }
-
   Future < dynamic > getGroups() async{
 
     // Making get request for data
@@ -95,7 +92,16 @@ class _HomeScreenState extends State<HomeScreen> {
       var individualGroup = lightGroups[("$i")];
       var groupName = individualGroup["name"];
       var groupLightsState = individualGroup["state"]["all_on"];
+      var lightGroupBrightness = individualGroup["action"]["bri"].toDouble();
+
+      var lGrBri = lightGroupBrightness;
+
       print(groupName);
+      print("$groupName brightness: $lightGroupBrightness");
+
+      if (groupLightsState == false) {
+        lightGroupBrightness = 0.0;
+      }
 
       setState(() {
         groups.add(
@@ -105,7 +111,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 context,
                 groupName,
                 groupLightsState,
-                editGroupAttr
+                lGrBri,
+                groupLightsState,
+                i,
+                'groups',
+                'action'
               )
             ]
           )
@@ -129,6 +139,19 @@ class _HomeScreenState extends State<HomeScreen> {
             ListView(
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.12),
+                /*Padding(
+                  padding: EdgeInsets.all(15),
+                  child: FloatingActionButton.extended(
+                    onPressed: () {
+                      /*Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ErrorScreen()),
+                      );*/
+                      print("Testing");
+                    },
+                    label: Text("Test Button")
+                  ),
+                ),*/
                 Padding(
                   padding: EdgeInsets.all(15.0),
                   child: Align(
@@ -153,6 +176,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   alignment: Alignment.center,
                   child: noDataMessage(context, "groups"),
                 ),
+
+                
               ],
             ),
             Padding(
@@ -172,13 +197,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         String lightsToggle = '{"on": $allLightsToggle}';
 
                         toggleAllLights(lightsToggle);
-                        // putRequest(developerUsn, developerIP, 'lights', 1, 'state', lightsToggle);
                       });
                     }
                   )
                 ),
               ),
             ),
+
+            
 
           ],
         ),
