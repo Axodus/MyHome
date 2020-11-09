@@ -18,4 +18,4 @@ String developerIP = 'yourBridgeIP';
 ```
 
 ## Recommendations
-If you have any idea about a better name, either DM me if you know me, or open an issue.
+If you have any idea about a better name, color scheme or anything else, either DM me if you know me, or open an issue.
