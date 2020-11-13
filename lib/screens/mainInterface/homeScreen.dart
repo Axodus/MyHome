@@ -139,19 +139,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ListView(
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.12),
-                /*Padding(
-                  padding: EdgeInsets.all(15),
-                  child: FloatingActionButton.extended(
-                    onPressed: () {
-                      /*Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ErrorScreen()),
-                      );*/
-                      print("Testing");
-                    },
-                    label: Text("Test Button")
-                  ),
-                ),*/
                 Padding(
                   padding: EdgeInsets.all(15.0),
                   child: Align(
@@ -160,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       "YOUR GROUPS",
                       style: TextStyle(
                         fontFamily: 'DinNext',
-                        color: secondary2,
+                        color: compl1,
                         fontSize: 22
                       ),
                     ),

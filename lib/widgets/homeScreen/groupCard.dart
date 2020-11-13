@@ -128,7 +128,7 @@ groupCard(context, groupName, state, lGrBri, groupLightState, id, type, action) 
                     width: 45,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: state ? primary : compl1,
+                      color: state ? Colors.green[900] : compl1,
                       borderRadius: BorderRadius.circular(100)
                     ),
                   ),
