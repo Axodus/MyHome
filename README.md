@@ -1,4 +1,4 @@
-# YourHome
+# MyHome
 
 A custom flutter app for Philips Hue lights.
 
