@@ -1,3 +1,5 @@
+This project is deprecated, further development has been moved [here](https://github.com/aikenahac/MyHome)
+
 # MyHome
 
 A custom flutter app for Philips Hue lights.
